@@ -96,7 +96,7 @@ const fetchWithTimeout = async (url: string, options: RequestInit, timeout = API
   }
 };
 
-export const authenticateUser = async (username: string, password: string) => {
+const fetchWithRetry = async (url: string, options: RequestInit, retries = API_CONFIG.retryAttempts) => {
   try {
     // First try a health check to wake up the server
     await fetch(`${API_CONFIG.baseURL}/health`, {
@@ -104,15 +104,28 @@ export const authenticateUser = async (username: string, password: string) => {
       headers: API_CONFIG.headers,
     });
 
-    // Then attempt login with increased timeout
-    const response = await fetchWithTimeout(
+    const response = await fetchWithTimeout(url, options, API_CONFIG.timeout);
+    return response;
+  } catch (error) {
+    if (retries > 0) {
+      console.log(`Retrying request... ${retries} attempts left`);
+      // Wait for 2 seconds before retrying
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return fetchWithRetry(url, options, retries - 1);
+    }
+    throw error;
+  }
+};
+
+export const authenticateUser = async (username: string, password: string) => {
+  try {
+    const response = await fetchWithRetry(
       `${API_CONFIG.baseURL}/auth/login`,
       {
         method: 'POST',
         headers: API_CONFIG.headers,
         body: JSON.stringify({ username, password }),
-      },
-      30000 // 30 second timeout
+      }
     );
 
     if (!response.ok) {
