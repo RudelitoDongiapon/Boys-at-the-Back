@@ -98,13 +98,21 @@ const fetchWithTimeout = async (url: string, options: RequestInit, timeout = API
 
 export const authenticateUser = async (username: string, password: string) => {
   try {
+    // First try a health check to wake up the server
+    await fetch(`${API_CONFIG.baseURL}/health`, {
+      method: 'GET',
+      headers: API_CONFIG.headers,
+    });
+
+    // Then attempt login with increased timeout
     const response = await fetchWithTimeout(
       `${API_CONFIG.baseURL}/auth/login`,
       {
         method: 'POST',
         headers: API_CONFIG.headers,
         body: JSON.stringify({ username, password }),
-      }
+      },
+      30000 // 30 second timeout
     );
 
     if (!response.ok) {
