@@ -8,12 +8,15 @@ interface ApiConfig {
   retryAttempts: number;
 }
 
+// Use environment variable for API URL if available
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://teacher-app-backend-mnqv.onrender.com/api';
+
 export const API_CONFIG: ApiConfig = {
-  baseURL: 'https://teacher-app-backend-mnqv.onrender.com/api',
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
-  timeout: 60000, // Increase timeout to 60 seconds
-  retryAttempts: 5, // Increase retry attempts
+  timeout: 30000, // 30 seconds timeout
+  retryAttempts: 3, // Number of retry attempts
 }; 

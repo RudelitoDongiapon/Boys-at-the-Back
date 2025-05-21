@@ -106,6 +106,7 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = API_C
       const healthCheck = await fetch(`${API_CONFIG.baseURL}/health`, {
         method: 'GET',
         headers: API_CONFIG.headers,
+        mode: 'cors',
       });
       console.log('Health check response:', await healthCheck.text());
     } catch (error) {
@@ -114,14 +115,17 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = API_C
     }
 
     console.log('Attempting main request...');
-    const response = await fetchWithTimeout(url, options, API_CONFIG.timeout);
+    const response = await fetchWithTimeout(url, {
+      ...options,
+      mode: 'cors',
+    }, API_CONFIG.timeout);
     return response;
   } catch (error) {
     console.error('Request failed:', error);
     if (retries > 0) {
       console.log(`Retrying request... ${retries} attempts left`);
-      // Wait for 3 seconds before retrying
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Wait for 2 seconds before retrying
+      await new Promise(resolve => setTimeout(resolve, 2000));
       return fetchWithRetry(url, options, retries - 1);
     }
     throw error;
