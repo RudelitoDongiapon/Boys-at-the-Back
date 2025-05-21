@@ -102,23 +102,26 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = API_C
     
     // First try a health check to wake up the server
     console.log('Performing health check...');
-    const healthCheck = await fetch(`${API_CONFIG.baseURL}/health`, {
-      method: 'GET',
-      headers: API_CONFIG.headers,
-    }).catch(error => {
+    try {
+      const healthCheck = await fetch(`${API_CONFIG.baseURL}/health`, {
+        method: 'GET',
+        headers: API_CONFIG.headers,
+      });
+      console.log('Health check response:', await healthCheck.text());
+    } catch (error) {
       console.error('Health check failed:', error);
-      throw new Error('Server is not reachable');
-    });
+      // Don't throw here, continue with the main request
+    }
 
-    console.log('Health check successful, proceeding with request...');
+    console.log('Attempting main request...');
     const response = await fetchWithTimeout(url, options, API_CONFIG.timeout);
     return response;
   } catch (error) {
     console.error('Request failed:', error);
     if (retries > 0) {
       console.log(`Retrying request... ${retries} attempts left`);
-      // Wait for 2 seconds before retrying
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Wait for 3 seconds before retrying
+      await new Promise(resolve => setTimeout(resolve, 3000));
       return fetchWithRetry(url, options, retries - 1);
     }
     throw error;

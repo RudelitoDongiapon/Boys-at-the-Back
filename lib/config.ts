@@ -14,6 +14,6 @@ export const API_CONFIG: ApiConfig = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
-  timeout: 30000, // 30 seconds timeout
-  retryAttempts: 3, // Number of retry attempts
+  timeout: 60000, // Increase timeout to 60 seconds
+  retryAttempts: 5, // Increase retry attempts
 }; 
