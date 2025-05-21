@@ -98,15 +98,23 @@ const fetchWithTimeout = async (url: string, options: RequestInit, timeout = API
 
 const fetchWithRetry = async (url: string, options: RequestInit, retries = API_CONFIG.retryAttempts) => {
   try {
+    console.log(`Attempting request to ${url} (${retries} retries left)`);
+    
     // First try a health check to wake up the server
-    await fetch(`${API_CONFIG.baseURL}/health`, {
+    console.log('Performing health check...');
+    const healthCheck = await fetch(`${API_CONFIG.baseURL}/health`, {
       method: 'GET',
       headers: API_CONFIG.headers,
+    }).catch(error => {
+      console.error('Health check failed:', error);
+      throw new Error('Server is not reachable');
     });
 
+    console.log('Health check successful, proceeding with request...');
     const response = await fetchWithTimeout(url, options, API_CONFIG.timeout);
     return response;
   } catch (error) {
+    console.error('Request failed:', error);
     if (retries > 0) {
       console.log(`Retrying request... ${retries} attempts left`);
       // Wait for 2 seconds before retrying
@@ -119,6 +127,18 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = API_C
 
 export const authenticateUser = async (username: string, password: string) => {
   try {
+    console.log('Starting login attempt...');
+    console.log('API URL:', `${API_CONFIG.baseURL}/auth/login`);
+    
+    // First try a health check
+    console.log('Performing health check...');
+    const healthCheck = await fetch(`${API_CONFIG.baseURL}/health`, {
+      method: 'GET',
+      headers: API_CONFIG.headers,
+    });
+    console.log('Health check response:', await healthCheck.text());
+
+    console.log('Attempting login request...');
     const response = await fetchWithRetry(
       `${API_CONFIG.baseURL}/auth/login`,
       {
@@ -128,18 +148,25 @@ export const authenticateUser = async (username: string, password: string) => {
       }
     );
 
+    console.log('Login response status:', response.status);
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      console.log('Login error data:', errorData);
       throw new Error(errorData.message || ERROR_MESSAGES.AUTH_ERROR);
     }
 
     const data = await response.json();
+    console.log('Login successful, user data:', data);
     return {
       success: true,
       user: data
     };
   } catch (error) {
-    console.error('Authentication error:', error);
+    console.error('Authentication error details:', {
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
     return {
       success: false,
       error: error instanceof Error ? error.message : ERROR_MESSAGES.AUTH_ERROR
