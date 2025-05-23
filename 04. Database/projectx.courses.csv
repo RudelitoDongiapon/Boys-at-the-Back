@@ -1,0 +1,2 @@
+_id,courseCode,courseName,description,lecturerId,schedules[0].days[0],schedules[0].days[1],schedules[0].days[2],schedules[0].days[3],schedules[0].days[4],schedules[0].startTime,schedules[0].endTime,schedules[0]._id,students[0],students[1],createdAt,updatedAt,__v
+6822f072cc16127b5f7abdbc,ITP131,Integrative 1,program,6820dbadd81bedfd1edbb97c,Mon,Tue,Wed,Thu,Fri,07:00,08:00,6822f072cc16127b5f7abdbd,6820e0373f63847198a4ead2,6820dbadd81bedfd1edbb97e,2025-05-13T07:10:42.948Z,2025-05-13T07:11:04.934Z,0

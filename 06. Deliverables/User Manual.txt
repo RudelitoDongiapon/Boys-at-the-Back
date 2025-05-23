@@ -1,0 +1,141 @@
+User Manual
+Project X: Automated Attendance System
+Version 1.0
+Table of Contents
+Introduction
+
+System Requirements
+
+User Roles
+
+Getting Started
+
+Core Features
+
+How To Use
+
+Lecturer Functions
+
+Student Functions
+
+Administrator Functions
+
+FAQs
+
+Support
+
+Introduction
+The Automated Attendance System is designed to streamline and digitize the student attendance process for universities. It offers real-time data storage, role-based access, secure photo capture, and reporting capabilities.
+
+System Requirements
+Internet-enabled device (smartphone, tablet, or PC)
+
+Modern web browser or mobile app
+
+Registered account (lecturer, student, or admin)
+
+GPS and camera access for location tracking and photo capture
+
+User Roles
+Role	Access & Permissions
+Lecturer	Mark attendance, register devices, view reports
+Student	Enroll in courses, view attendance
+Administrator	Full system access (CRUD operations, reports, etc.)
+
+Getting Started
+1. Login
+Open the web/mobile app.
+
+Enter your username and password.
+
+Click Login.
+
+2. Dashboard
+View your role-specific dashboard.
+
+Access functions such as "Mark Attendance", "Enroll", "Generate Reports", etc.
+
+Core Features
+Real-time attendance recording
+
+Role-based data access
+
+GPS location for device verification
+
+Photo capture for student ID
+
+Comprehensive reports generation
+
+REST API backend with cloud storage
+
+How To Use
+Lecturer Functions
+Register Device
+
+Go to Settings > Devices.
+
+Click Register New Device.
+
+Confirm registration via email or OTP.
+
+Mark Attendance
+
+Navigate to Attendance > Mark Attendance.
+
+Select the course and session.
+
+Choose attendance method (QR, photo, manual).
+
+Submit attendance; data is stored in real-time.
+
+Generate Reports
+
+Go to Reports.
+
+Apply filters (course, student, date).
+
+Click Generate and download as PDF or CSV.
+
+Student Functions
+Enroll in Course
+
+Click Courses > Enroll.
+
+Select course and confirm.
+
+View enrolled courses in your dashboard.
+
+View Attendance
+
+Navigate to My Attendance.
+
+View history and status for each course.
+
+Administrator Functions
+Manage Users
+
+Go to Admin Panel > Users.
+
+Add, update, or delete student and lecturer profiles.
+
+Manage Courses
+
+Navigate to Courses.
+
+Create, update, or remove courses and assignments.
+
+View & Export Reports
+
+Access Reports > Admin Reports.
+
+Filter data and export in desired format.
+
+FAQs
+Q: What if my device is not recognized?
+A: Only registered devices can be used. Re-register your device under Settings > Devices.
+
+Q: Can I update my photo?
+A: Students must contact a lecturer to retake and update their profile photo.
+
+Q: Is offline attendance possible?
+A: Yes, data is stored locally and synced once the internet is available.
