@@ -1,4 +1,4 @@
-interface ApiConfig {
+export interface ApiConfig {
   baseURL: string;
   headers: {
     'Content-Type': string;

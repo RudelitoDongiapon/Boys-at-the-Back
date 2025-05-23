@@ -134,42 +134,52 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = API_C
 
 export const authenticateUser = async (username: string, password: string) => {
   try {
-    console.log('Starting login attempt...');
-    console.log('API URL:', `${API_CONFIG.baseURL}/auth/login`);
+    console.log('=== Login Debug Info ===');
+    console.log('1. Starting login attempt...');
+    console.log('2. API URL:', `${API_CONFIG.baseURL}/auth/login`);
+    console.log('3. Headers:', API_CONFIG.headers);
     
     // First try a health check
-    console.log('Performing health check...');
-    const healthCheck = await fetch(`${API_CONFIG.baseURL}/health`, {
-      method: 'GET',
-      headers: API_CONFIG.headers,
-    });
-    console.log('Health check response:', await healthCheck.text());
+    console.log('4. Performing health check...');
+    try {
+      const healthCheck = await fetch(`${API_CONFIG.baseURL}/health`, {
+        method: 'GET',
+        headers: API_CONFIG.headers,
+        mode: 'cors',
+      });
+      const healthText = await healthCheck.text();
+      console.log('5. Health check response:', healthText);
+      console.log('6. Health check status:', healthCheck.status);
+    } catch (error) {
+      console.error('7. Health check failed:', error);
+    }
 
-    console.log('Attempting login request...');
+    console.log('8. Attempting login request...');
     const response = await fetchWithRetry(
       `${API_CONFIG.baseURL}/auth/login`,
       {
         method: 'POST',
         headers: API_CONFIG.headers,
         body: JSON.stringify({ username, password }),
+        mode: 'cors',
       }
     );
 
-    console.log('Login response status:', response.status);
+    console.log('9. Login response status:', response.status);
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.log('Login error data:', errorData);
+      console.log('10. Login error data:', errorData);
       throw new Error(errorData.message || ERROR_MESSAGES.AUTH_ERROR);
     }
 
     const data = await response.json();
-    console.log('Login successful, user data:', data);
+    console.log('11. Login successful, user data:', data);
     return {
       success: true,
       user: data
     };
   } catch (error) {
-    console.error('Authentication error details:', {
+    console.error('12. Authentication error details:', {
       name: error instanceof Error ? error.name : 'Unknown',
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined
